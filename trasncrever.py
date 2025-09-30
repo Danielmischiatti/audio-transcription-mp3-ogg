@@ -33,21 +33,28 @@ def transcrever_audio(arquivo):
             # Transcrever o arquivo convertido
             result = model.transcribe(converted_file_path, language="pt")
             
-            # Espera um pouco para garantir que o arquivo foi fechado antes de removê-lo
-            time.sleep(1)
+            # Espera mais tempo para garantir que o arquivo foi fechado antes de removê-lo
+            time.sleep(3)  # Aumenta o tempo de espera
 
-            # Remover os arquivos temporários após o uso
-            if os.path.exists(tmpfile_path):
+            # Remover os arquivos temporários após o uso com tentativas
+            for _ in range(3):  # Tentativas de remoção (3 tentativas)
                 try:
-                    os.remove(tmpfile_path)  # Remove o arquivo temporário original
+                    if os.path.exists(tmpfile_path):
+                        os.remove(tmpfile_path)  # Remove o arquivo temporário original
+                    break  # Se removido com sucesso, sai do loop
                 except PermissionError:
                     print(f"Erro ao remover o arquivo temporário: {tmpfile_path}")
-            if os.path.exists(converted_file_path):
+                    time.sleep(1)  # Aguarda 1 segundo e tenta novamente
+
+            for _ in range(3):  # Tentativas de remoção do arquivo convertido
                 try:
-                    os.remove(converted_file_path)  # Remove o arquivo convertido
+                    if os.path.exists(converted_file_path):
+                        os.remove(converted_file_path)  # Remove o arquivo convertido
+                    break  # Se removido com sucesso, sai do loop
                 except PermissionError:
                     print(f"Erro ao remover o arquivo convertido: {converted_file_path}")
-            
+                    time.sleep(1)  # Aguarda 1 segundo e tenta novamente
+
             return result["text"]
     else:
         # Caso o arquivo não seja .ogg, prosseguir com a transcrição diretamente
@@ -61,16 +68,20 @@ def transcrever_audio(arquivo):
             # Transcrever o arquivo original
             result = model.transcribe(tmpfile_path, language="pt")
             
-            # Espera um pouco para garantir que o arquivo foi fechado antes de removê-lo
-            time.sleep(1)
+            # Espera mais tempo para garantir que o arquivo foi fechado antes de removê-lo
+            time.sleep(3)  # Aumenta o tempo de espera
 
-            # Remover o arquivo temporário após o uso
-            if os.path.exists(tmpfile_path):
+            # Remover o arquivo temporário após o uso com tentativas
+            for _ in range(3):  # Tentativas de remoção (3 tentativas)
                 try:
-                    os.remove(tmpfile_path)  # Remove o arquivo temporário
+                    if os.path.exists(tmpfile_path):
+                        os.remove(tmpfile_path)  # Remove o arquivo temporário
+                    break  # Se removido com sucesso, sai do loop
                 except PermissionError:
                     print(f"Erro ao remover o arquivo temporário: {tmpfile_path}")
+                    time.sleep(1)  # Aguarda 1 segundo e tenta novamente
             
             return result["text"]
+
 
 

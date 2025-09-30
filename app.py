@@ -19,16 +19,10 @@ if uploaded_file is not None:
         st.write("### Transcrição:")
         st.write(transcricao)
         
-        # Salvar o texto transcrito em um arquivo TXT
-        output_file = "transcricao_audio.txt"  # Arquivo de saída
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(transcricao)
-        
-        # Link para download do arquivo TXT
-        with open(output_file, "r", encoding="utf-8") as f:
-            st.download_button(
-                label="Baixar a transcrição em TXT",
-                data=f.read(),
-                file_name=output_file,
-                mime="text/plain"
-            )
+        # Fornecer a transcrição para o download sem salvar no arquivo local
+        st.download_button(
+            label="Baixar a transcrição em TXT",
+            data=transcricao,  # Passa o texto diretamente como dados
+            file_name="transcricao_audio.txt",  # Nome do arquivo de download
+            mime="text/plain"  # Tipo MIME do arquivo
+        )
