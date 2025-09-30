@@ -11,17 +11,17 @@ def transcrever_audio(arquivo):
     # Verificar o tipo do arquivo
     arquivo_ext = arquivo.name.split('.')[-1].lower()  # Obtém a extensão do arquivo
 
-    # Se for um arquivo .ogg, realizar a conversão
-    if arquivo_ext == 'ogg':
+    # Se for um arquivo .ogg ou .opus, realizar a conversão
+    if arquivo_ext in ['ogg', 'opus']:
         # Criar um arquivo temporário para salvar o arquivo convertido
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmpfile:
             tmpfile_path = tmpfile.name
             
-            # Salvar o arquivo .ogg temporariamente para conversão
+            # Salvar o arquivo .ogg ou .opus temporariamente para conversão
             with open(tmpfile_path, 'wb') as f:
                 f.write(arquivo.getvalue())
             
-            # Converter o arquivo .ogg para .wav (ou .mp3) usando FFmpeg
+            # Converter o arquivo OPUS/OGG para .wav (ou .mp3) usando FFmpeg
             converted_file_path = tmpfile_path.replace(".mp3", ".wav")  # Mudar para .wav
             try:
                 # Chama o FFmpeg para converter o arquivo de áudio
@@ -33,10 +33,10 @@ def transcrever_audio(arquivo):
             # Transcrever o arquivo convertido
             result = model.transcribe(converted_file_path, language="pt")
             
-            # Espera mais tempo para garantir que o arquivo foi fechado antes de removê-lo
-            time.sleep(3)  # Aumenta o tempo de espera
+            # Espera um pouco para garantir que o arquivo foi fechado antes de removê-lo
+            time.sleep(2)  # Aumenta o tempo de espera
 
-            # Remover os arquivos temporários após o uso com tentativas
+            # Remover os arquivos temporários após o uso
             for _ in range(3):  # Tentativas de remoção (3 tentativas)
                 try:
                     if os.path.exists(tmpfile_path):
@@ -57,7 +57,7 @@ def transcrever_audio(arquivo):
 
             return result["text"]
     else:
-        # Caso o arquivo não seja .ogg, prosseguir com a transcrição diretamente
+        # Caso o arquivo não seja .ogg ou .opus, prosseguir com a transcrição diretamente
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmpfile:
             tmpfile_path = tmpfile.name
             
@@ -69,7 +69,7 @@ def transcrever_audio(arquivo):
             result = model.transcribe(tmpfile_path, language="pt")
             
             # Espera mais tempo para garantir que o arquivo foi fechado antes de removê-lo
-            time.sleep(3)  # Aumenta o tempo de espera
+            time.sleep(2)  # Aumenta o tempo de espera
 
             # Remover o arquivo temporário após o uso com tentativas
             for _ in range(3):  # Tentativas de remoção (3 tentativas)
@@ -82,6 +82,7 @@ def transcrever_audio(arquivo):
                     time.sleep(1)  # Aguarda 1 segundo e tenta novamente
             
             return result["text"]
+
 
 
 

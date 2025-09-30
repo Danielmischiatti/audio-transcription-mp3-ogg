@@ -3,10 +3,10 @@ from trasncrever import transcrever_audio  # Importa a função de transcrição
 
 # Interface Streamlit
 st.title("Transcrição de Áudio para Texto")
-st.write("Carregue um arquivo de áudio (.mp3 ou .ogg) para transcrevê-lo.")
+st.write("Carregue um arquivo de áudio (.mp3, .ogg, .opus) para transcrevê-lo.")
 
-# Uploader de arquivo, agora com suporte a .ogg
-uploaded_file = st.file_uploader("Escolha um arquivo de áudio", type=["mp3", "ogg"])
+# Uploader de arquivo, agora com suporte a .opus
+uploaded_file = st.file_uploader("Escolha um arquivo de áudio", type=["mp3", "ogg", "opus"])
 
 if uploaded_file is not None:
     st.audio(uploaded_file, format="audio/mp3")  # Exibe o áudio carregado
